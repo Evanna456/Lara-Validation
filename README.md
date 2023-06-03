@@ -3,6 +3,10 @@
 Laravel Validation but in Javascript
 
 ## Usage
+
+Installation
+CDN: https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js
+
 ```
 const _validator = new Validator();
         var data = {
