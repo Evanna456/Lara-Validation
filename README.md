@@ -3,7 +3,7 @@
 Laravel Validation but in Javascript
 
 ## Usage
-
+```
 const _validator = new Validator();
         var data = {
           name: $('#name').val(),
@@ -19,7 +19,7 @@ const _validator = new Validator();
 		     console.log(_validator.first().error);
           return;
         }
-
+```
 ## Javascript 
 
 <p align="center"><img src="https://i.imgur.com/VVZKmC1.jpg" width="150px" height="auto" alt="Logo"></a></p>
