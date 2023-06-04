@@ -7,7 +7,7 @@ Laravel Validation but in Javascript
 Installation
 CDN: https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js
 
-```
+```js
 const _validator = new Validator();
         var data = {
           name: $('#name').val(),
