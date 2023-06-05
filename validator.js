@@ -2,14 +2,20 @@ class Validator {
     constructor() {
         this.isFailed = false;
         this.all_errors = new Array();
+        this.all_error_names = new Array();
+        this.first_errors = new Array();
         this.default_messages = {
             "required": "The :attribute field is required",
-            "integer": "The :attribute field should be an integer",
             "min": "The :attribute should be more than :min characters",
             "max": "The :attribute should be less than :max characters",
+            "alpha": "The :attribute should only contain letters",
             "alphanum": "The :attribute should only contain letters and numbers",
+            "integer": "The :attribute should be an integer",
+            "number": "The :attribute should be a number",
             "email": "The :attribute should be an email address",
-            "regex": "Invalid Input"
+            "regex": "Invalid Input",
+            "mimes": "The :attribute only accepts :mimes types",
+            "size": "The :attribute should be lesser than :size kb"
         };
     }
     make(data, config, messages) {
@@ -19,87 +25,47 @@ class Validator {
         Object.keys(config).forEach(key => {
             var name = key;
             var rules = config[key].split("|");
-            for (var item of rules) {
-                item = item.split(":");
-                switch (item[0]) {
+            for (var rule of rules) {
+                rule = rule.split(":");
+                switch (rule[0]) {
                     case "required":
                         if (data[key].length == 0) {
                             this.isFailed = true;
-                            if (name + "." + item[0] in messages == true) {
-                                var new_message = messages[name + "." + item[0]];
-                            } else if (name + "." + item[0] in messages == false) {
-                                var new_message = messages[item[0]];
-                            } else if (item[0] in messages == false) {
-                                var new_message = this.default_messages[item[0]];
-                            }
-                            if (new_message != undefined) {
-                                new_message = new_message.replace(":attribute", name);
-                            }
-                            this.all_errors.push({
-                                name: name,
-                                error: new_message
-                            });
-                        }
-                        break;
-                    case "integer":
-                        if (Number.isInteger(Number(data[key])) == false) {
-                            this.isFailed = true;
-                            if (name + "." + item[0] in messages == true) {
-                                var new_message = messages[name + "." + item[0]];
-                            } else if (name + "." + item[0] in messages == false) {
-                                var new_message = messages[item[0]];
-                            } else if (item[0] in messages == false) {
-                                var new_message = this.default_messages[item[0]];
-                            }
-                            if (new_message != undefined) {
-                                new_message = new_message.replace(":attribute", name);
-                            }
-                            this.all_errors.push({
-                                name: name,
-                                error: new_message
-                            });
+                            this.insertError(messages, name, rule[0]);
                         }
                         break;
                     case "min":
-                        if (item[0] == "min") {
-                            if (data[key].length < item[1] && data[key] != "") {
+                        if (isNaN(data[key]) && data[key] != "") {
+                            if (data[key].length < rule[1] && data[key] != "") {
                                 this.isFailed = true;
-                                if (name + "." + item[0] in messages == true) {
-                                    var new_message = messages[name + "." + item[0]];
-                                } else if (name + "." + item[0] in messages == false) {
-                                    var new_message = messages[item[0]];
-                                } else if (item[0] in messages == false) {
-                                    var new_message = this.default_messages[item[0]];
-                                }
-                                if (new_message != undefined) {
-                                    new_message = new_message.replace(":attribute", name);
-                                    new_message = new_message.replace(":min", item[1]);
-                                }
-                                this.all_errors.push({
-                                    name: name,
-                                    error: new_message
-                                });
+                                this.insertError(messages, name, rule[0], rule[1]);
+                            }
+                        } else {
+                            if (Number(data[key]) < rule[1] && data[key] != "") {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
                             }
                         }
                         break;
                     case "max":
-                        if (data[key].length > item[1]) {
+                        if (isNaN(data[key]) && data[key] != "") {
+                            if (data[key].length > rule[1] && data[key] != "") {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
+                            }
+                        } else {
+                            if (Number(data[key]) > rule[1] && data[key] != "") {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
+                            }
+                        }
+                        break;
+                    case "alpha":
+                        var regex = new RegExp(/^[a-zA-Z]+$/);
+                        var test = regex.test(data[key]);
+                        if (test == false) {
                             this.isFailed = true;
-                            if (name + "." + item[0] in messages == true) {
-                                var new_message = messages[name + "." + item[0]];
-                            } else if (name + "." + item[0] in messages == false) {
-                                var new_message = messages[item[0]];
-                            } else if (item[0] in messages == false) {
-                                var new_message = this.default_messages[item[0]];
-                            }
-                            if (new_message != undefined) {
-                                new_message = new_message.replace(":attribute", name);
-                                new_message = new_message.replace(":max", item[1]);
-                            }
-                            this.all_errors.push({
-                                name: name,
-                                error: new_message
-                            });
+                            this.insertError(messages, name, rule[0]);
                         }
                         break;
                     case "alphanum":
@@ -107,21 +73,19 @@ class Validator {
                         var test = regex.test(data[key]);
                         if (test == false) {
                             this.isFailed = true;
-                            if (name + "." + item[0] in messages == true) {
-                                var new_message = messages[name + "." + item[0]];
-                            } else if (name + "." + item[0] in messages == false) {
-                                var new_message = messages[item[0]];
-                            } else if (item[0] in messages == false) {
-                                var new_message = this.default_messages[item[0]];
-                            }
-                            if (new_message != undefined) {
-                                new_message = new_message.replace(":attribute", name);
-                                new_message = new_message.replace(":min", item[1]);
-                            }
-                            this.all_errors.push({
-                                name: name,
-                                error: new_message
-                            });
+                            this.insertError(messages, name, rule[0]);
+                        }
+                        break;
+                    case "integer":
+                        if (Number.isInteger(Number(data[key])) == false) {
+                            this.isFailed = true;
+                            this.insertError(messages, name, rule[0]);
+                        }
+                        break;
+                    case "number":
+                        if (isNaN(data[key])) {
+                            this.isFailed = true;
+                            this.insertError(messages, name, rule[0]);
                         }
                         break;
                     case "email":
@@ -129,45 +93,85 @@ class Validator {
                         var test = regex.test(data[key]);
                         if (test == false) {
                             this.isFailed = true;
-                            if (name + "." + item[0] in messages == true) {
-                                var new_message = messages[name + "." + item[0]];
-                            } else if (name + "." + item[0] in messages == false) {
-                                var new_message = messages[item[0]];
-                            } else if (item[0] in messages == false) {
-                                var new_message = this.default_messages[item[0]];
-                            }
-                            if (new_message != undefined) {
-                                new_message = new_message.replace(":attribute", name);
-                            }
-                            this.all_errors.push({
-                                name: name,
-                                error: new_message
-                            });
+                            this.insertError(messages, name, rule[0]);
                         }
                         break;
                     case "regex":
-                        var regex = new RegExp(item[1]);
+                        var regex = new RegExp(rule[1]);
                         var test = regex.test(data[key]);
                         if (test == false) {
                             this.isFailed = true;
-                            if (name + "." + item[0] in messages == true) {
-                                var new_message = messages[name + "." + item[0]];
-                            } else if (name + "." + item[0] in messages == false) {
-                                var new_message = messages[item[0]];
-                            } else if (item[0] in messages == false) {
-                                var new_message = this.default_messages[item[0]];
+                            this.insertError(messages, name, rule[0]);
+                        }
+                        break;
+                    case "mimes":
+                        if (typeof window === "undefined") {
+                            var allowed_types = rule[1].split(",");
+                            var file = data[key].filename;
+                            file = file.split(".");
+                            var extension = file[1];
+                            if (allowed_types.includes(extension) == false) {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
                             }
-                            if (new_message != undefined) {
-                                new_message = new_message.replace(":attribute", name);
+                        } else {
+                            var allowed_types = rule[1].split(",");
+                            var file = data[key].name;
+                            file = file.split(".");
+                            var extension = file[1];
+                            if (allowed_types.includes(extension) == false) {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
                             }
-                            this.all_errors.push({
-                                name: name,
-                                error: new_message
-                            });
+                        }
+                        break;
+                    case "size":
+                        if (typeof window === "undefined") {
+                            var fs = require("fs");
+                            var stats = fs.statSync(data[key]);
+                            var kb = stats.size / 1024;
+                            if (rule[1] < kb) {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
+                            }
+                        } else {
+                            var kb = data[key].size / 1024;
+                            if (rule[1] < kb) {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0], rule[1]);
+                            }
                         }
                         break;
                 }
             }
+        });
+    }
+    insertError(messages, name, rule, value) {
+        var new_message;
+        if (name + "." + rule in messages == true) {
+            new_message = messages[name + "." + rule];
+        } else if (name + "." + rule in messages == false) {
+            if (rule in messages == false) {
+                new_message = this.default_messages[rule];
+            } else if (rule in messages == true) {
+                new_message = messages[rule];
+            }
+        }
+        if (new_message != undefined) {
+            new_message = new_message.replace(":attribute", name);
+            if (rule == "min") {
+                new_message = new_message.replace(":min", value);
+            } else if (rule == "max") {
+                new_message = new_message.replace(":max", value);
+            } else if (rule == "mimes") {
+                new_message = new_message.replace(":mimes", value);
+            } else if (rule == "size") {
+                new_message = new_message.replace(":size", value);
+            }
+        }
+        this.all_errors.push({
+            name: name,
+            error: new_message
         });
     }
     fails() {
@@ -178,6 +182,20 @@ class Validator {
     }
     first() {
         return this.all_errors[0];
+    }
+    firstErrors() {
+        for (var all_error of this.all_errors) {
+            this.all_error_names.push(all_error.name);
+        }
+        var uniqueSet = [...new Set(this.all_error_names)];
+        for (var all_error_name of uniqueSet) {
+            var x = this.all_errors.find(x => x.name === all_error_name);
+            this.first_errors.push({
+                name: x.name,
+                error: x.error
+            });
+        }
+        return this.first_errors;
     }
 }
 
