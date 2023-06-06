@@ -29,7 +29,12 @@ class Validator {
                 rule = rule.split(":");
                 switch (rule[0]) {
                     case "required":
-                        if (data[key].length == 0) {
+                        if (data[key] != undefined) {
+                            if (data[key].length == 0) {
+                                this.isFailed = true;
+                                this.insertError(messages, name, rule[0]);
+                            }
+                        } else {
                             this.isFailed = true;
                             this.insertError(messages, name, rule[0]);
                         }
@@ -105,40 +110,44 @@ class Validator {
                         }
                         break;
                     case "mimes":
-                        if (typeof window === "undefined") {
-                            var allowed_types = rule[1].split(",");
-                            var file = data[key].filename;
-                            file = file.split(".");
-                            var extension = file[1];
-                            if (allowed_types.includes(extension) == false) {
-                                this.isFailed = true;
-                                this.insertError(messages, name, rule[0], rule[1]);
-                            }
-                        } else {
-                            var allowed_types = rule[1].split(",");
-                            var file = data[key].name;
-                            file = file.split(".");
-                            var extension = file[1];
-                            if (allowed_types.includes(extension) == false) {
-                                this.isFailed = true;
-                                this.insertError(messages, name, rule[0], rule[1]);
+                        if (data[key] != undefined) {
+                            if (typeof window === "undefined") {
+                                var allowed_types = rule[1].split(",");
+                                var file = data[key].filename;
+                                file = file.split(".");
+                                var extension = file[1];
+                                if (allowed_types.includes(extension) == false) {
+                                    this.isFailed = true;
+                                    this.insertError(messages, name, rule[0], rule[1]);
+                                }
+                            } else {
+                                var allowed_types = rule[1].split(",");
+                                var file = data[key].name;
+                                file = file.split(".");
+                                var extension = file[1];
+                                if (allowed_types.includes(extension) == false) {
+                                    this.isFailed = true;
+                                    this.insertError(messages, name, rule[0], rule[1]);
+                                }
                             }
                         }
                         break;
                     case "size":
-                        if (typeof window === "undefined") {
-                            var fs = require("fs");
-                            var stats = fs.statSync(data[key]);
-                            var kb = stats.size / 1024;
-                            if (rule[1] < kb) {
-                                this.isFailed = true;
-                                this.insertError(messages, name, rule[0], rule[1]);
-                            }
-                        } else {
-                            var kb = data[key].size / 1024;
-                            if (rule[1] < kb) {
-                                this.isFailed = true;
-                                this.insertError(messages, name, rule[0], rule[1]);
+                        if (data[key] != undefined) {
+                            if (typeof window === "undefined") {
+                                var fs = require("fs");
+                                var stats = fs.statSync(data[key]);
+                                var kb = stats.size / 1024;
+                                if (rule[1] < kb) {
+                                    this.isFailed = true;
+                                    this.insertError(messages, name, rule[0], rule[1]);
+                                }
+                            } else {
+                                var kb = data[key].size / 1024;
+                                if (rule[1] < kb) {
+                                    this.isFailed = true;
+                                    this.insertError(messages, name, rule[0], rule[1]);
+                                }
                             }
                         }
                         break;
@@ -159,15 +168,7 @@ class Validator {
         }
         if (new_message != undefined) {
             new_message = new_message.replace(":attribute", name);
-            if (rule == "min") {
-                new_message = new_message.replace(":min", value);
-            } else if (rule == "max") {
-                new_message = new_message.replace(":max", value);
-            } else if (rule == "mimes") {
-                new_message = new_message.replace(":mimes", value);
-            } else if (rule == "size") {
-                new_message = new_message.replace(":size", value);
-            }
+            new_message = new_message.replace(":" + rule, value);
         }
         this.all_errors.push({
             name: name,
