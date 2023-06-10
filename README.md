@@ -32,7 +32,7 @@ const _validator = new Validator();
 Custom Message:
 	
 <p>:attribute => name of the input</p>
-<p>:<rule> => value of the input for example :min, :max</p>
+<p>:rule => value of the input for example :min, :max</p>
 
 ```js
 const _validator = new Validator();
