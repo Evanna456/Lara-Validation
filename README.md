@@ -5,8 +5,19 @@ Laravel Validation but in Javascript
 ## Usage
 
 Installation
-CDN: https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js
+CDN: <script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js">
 
+Supported Rule:
+
+-required
+-integer
+-number
+-min
+-max
+-regex
+-mimes
+	
+Basic Usage:
 ```js
 const _validator = new Validator();
         var data = {
@@ -20,10 +31,36 @@ const _validator = new Validator();
           email: "required|email"
         });
         if (_validator.fails()) {
-		     console.log(_validator.first().error);
+          console.log(_validator.first().error);
           return;
         }
 ```
+Custom Message:
+	
+:attribute => name of the input
+:<rule> => value of the input for example :min, :max
+
+```js
+const _validator = new Validator();
+        var data = {
+          name: $('#name').val(),
+          email: $('#email').val(),
+          username: $('#username').val()
+        };
+        _validator.make(data, {
+          name: "required|min:3|max:20",
+          username: "required|alphanum",
+          email: "required|email"
+        }, messages = {
+	  name: "The :attribute field is required", //apply to all with a required rule
+	  email.required: "It is required to have an :attribute" //apply this message to a specific input
+	});
+        if (_validator.fails()) {
+          console.log(_validator.first().error);
+          return;
+        }
+```
+
 ## Javascript 
 
 <p align="center"><img src="https://i.imgur.com/VVZKmC1.jpg" width="150px" height="auto" alt="Logo"></a></p>
