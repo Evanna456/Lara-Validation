@@ -4,7 +4,6 @@ Laravel Validation but in Javascript
 
 ## Usage
 
-Installation
 CDN: <script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js">
 
 Supported Rule:
