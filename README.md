@@ -8,8 +8,10 @@ Installation
 CDN: <script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js">
 
 Supported Rule:
-
+	
+```
 required, integer, number, min, max, email, regex, mimes
+```
 	
 Methods:
 	
