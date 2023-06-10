@@ -9,13 +9,7 @@ CDN: <script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/v
 
 Supported Rule:
 
--required
--integer
--number
--min
--max
--regex
--mimes
+required, integer, number, min, max, email, regex, mimes
 	
 Basic Usage:
 ```js
@@ -37,8 +31,8 @@ const _validator = new Validator();
 ```
 Custom Message:
 	
-:attribute => name of the input
-:<rule> => value of the input for example :min, :max
+<p>:attribute => name of the input</p>
+<p>:<rule> => value of the input for example :min, :max</p>
 
 ```js
 const _validator = new Validator();
