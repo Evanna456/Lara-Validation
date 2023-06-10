@@ -46,8 +46,8 @@ const _validator = new Validator();
           username: "required|alphanum",
           email: "required|email"
         }, messages = {
-	  name: "The :attribute field is required", //apply to all with a required rule
-	  email.required: "It is required to have an :attribute" //apply this message to a specific input
+	  "name": "The :attribute field is required", //apply to all with a required rule
+	  "email.required": "It is required to have an :attribute" //apply this message to a specific input
 	});
         if (_validator.fails()) {
           console.log(_validator.first().error);
