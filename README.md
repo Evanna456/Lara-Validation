@@ -11,6 +11,13 @@ Supported Rule:
 
 required, integer, number, min, max, email, regex, mimes
 	
+Methods:
+
+<p>fails() => returns (boolean) true when an input is invalid</p>
+<p>errors() => returns (object) all error messages</p>
+<p>first() => returns (object) the first error message </p>
+<p>firstErrors() => returns (object) all first error message for each input</p>
+	
 Basic Usage:
 ```js
 const _validator = new Validator();
