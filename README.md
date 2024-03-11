@@ -71,7 +71,10 @@ const _validator = new Validator();
 
 | Task    | Status | Items  | 
 | ------- | ------ | ---------- |
-| Validation Functions | ------ | <ul><li>- [ ] required</li><li>- [ ] integer</li><li>- [ ] number</li><li>- [ ] min</li><li>- [ ] max</li><li>- [ ] email</li><li>- [ ] regex</li></ul> |
+| Validation Functions | Finished | <ul><li>- [x] required</li><li>- [x] integer</li><li>- [x] number</li><li>- [x] min</li><li>- [x] max</li><li>- [x] email</li><li>- [x] regex</li></ul> |
+| HTML Compatibility | Finished | <ul><li>- [x] Javascript</li></ul> |
+| ExpressJS Compatibility | Finished | <ul><li>- [x] Javascript</li></ul> |
+| Vue Compatibility | Pending | <ul><li>- [] required</li></ul> |
 
 ## Javascript 
 
