@@ -9,7 +9,7 @@ CDN: <script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/v
 Supported Rule:
 	
 ```
-required, integer, number, min, max, email, regex, mimes
+required, integer, number, min, max, email, regex
 ```
 	
 Methods:
@@ -66,6 +66,12 @@ const _validator = new Validator();
           return;
         }
 ```
+
+## Roadmap
+
+| Task    | Status | Items  | 
+| ------- | ------ | ---------- |
+| Validation Functions | ------ | <ul><li>- [ ] required</li><li>- [ ] integer</li><li>- [ ] number</li><li>- [ ] min</li><li>- [ ] max</li><li>- [ ] email</li><li>- [ ] regex</li></ul> |
 
 ## Javascript 
 
