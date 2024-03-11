@@ -4,15 +4,13 @@ Laravel Validation but in Javascript
 
 ## Usage
 
-CDN: <script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js">
+### CDN
 
-Supported Rule:
-	
 ```
-required, integer, number, min, max, email, regex
+<script src="https://cdn.jsdelivr.net/gh/Evanna456/lara-validationjs@main/validator.js">
 ```
-	
-Methods:
+
+### Methods:
 	
 ```
 fails() => returns (boolean) true when an input is invalid</p>
@@ -21,7 +19,12 @@ first() => returns (object) the first error message
 firstErrors() => returns (object) all first error message for each input
 ```
 
-Basic Usage:
+### Supported Rule:
+	
+<p>required, integer, number, min, max, email, regex</p>
+
+
+### Basic Usage:
 ```js
 const _validator = new Validator();
         var data = {
@@ -39,7 +42,7 @@ const _validator = new Validator();
           return;
         }
 ```
-Custom Message:
+### Custom Message:
 
 ```
 :attribute => name of the input
