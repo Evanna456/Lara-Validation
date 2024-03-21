@@ -1,9 +1,9 @@
-class Validator {
+export default class Validator {
     constructor() {
         this.isFailed = false;
-        this.all_errors = new Array();
-        this.all_error_names = new Array();
-        this.first_errors = new Array();
+        this.all_errors = [];
+        this.all_error_names = [];
+        this.first_errors = [];
         this.default_messages = {
             "required": "The :attribute field is required",
             "min": "The :attribute should be more than :min characters",
